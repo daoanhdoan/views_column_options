@@ -1,0 +1,10 @@
+<?php
+/**
+ * @file
+ */
+/**
+ * Implement @see hook_install()
+ */
+function views_column_options_install($is_syncing) {
+  module_set_weight('views_column_options', 999999);
+}

@@ -1,0 +1,7 @@
+name: Views column options
+type: module
+description: 'Adds some features in Views module.'
+core_version_requirement: ^9
+package: 'DNC - Views'
+dependencies:
+  - drupal:views

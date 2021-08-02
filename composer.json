@@ -1,0 +1,9 @@
+{
+  "name": "daoanhdoan/views_column_options",
+  "description": "Views column options - Adds some features in Views module.",
+  "type": "drupal-custom-module",
+  "license":"GPL-2.0",
+  "extra": {
+    "installer-name": "views_column_options"
+  }
+}

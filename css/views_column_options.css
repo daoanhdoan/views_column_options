@@ -1,0 +1,8 @@
+.views-column-options a.tabledrag-handle .handle {
+  width: 16px;
+  height: 16px;
+  margin: 0 5px 0px 0px;
+  padding: 0px;
+  background-position: 0px 0px;
+  display: block;
+}

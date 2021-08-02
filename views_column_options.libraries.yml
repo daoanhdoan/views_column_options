@@ -1,0 +1,4 @@
+views_column_options:
+  css:
+    component:
+      css/views_column_options.css: {}

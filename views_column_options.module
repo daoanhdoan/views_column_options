@@ -1,0 +1,71 @@
+<?php
+/**
+ * @file
+ */
+
+use Drupal\Core\Utility\TableSort;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
+
+/**
+ *
+ */
+function views_column_options_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+  $display_id = ($view->display_handler->isDefaulted('filters')) ? 'default' : $view->current_display;
+  if (!$fields_info = $view->getHandlers('field', $display_id)) {
+    return;
+  }
+
+  $handlers = $view->getHandlers('filter', $display_id);
+  if (empty($handlers['views_column_options'])) {
+    return;
+  }
+  $handler = $handlers['views_column_options'];
+  $fields = !empty($handler['fields']) ? $handler['fields'] : [];
+
+  $query = TableSort::getQueryParameters(\Drupal::request());
+
+  $column_options = [];
+  $submitted = array_key_exists('views_column_options', $query);
+  if ($submitted && !empty($query['views_column_options'])) {
+    $column_options = $query['views_column_options'];
+  }
+  /*elseif (isset($_SESSION['views'][$view->storage->id()][$display_id]['views_column_options']) &&
+    !empty($_SESSION['views'][$view->storage->id()][$display_id]['views_column_options'])) {
+    $column_options = $_SESSION['views'][$view->storage->id()][$display_id]['views_column_options'];
+  }*/
+
+  $options = !empty($column_options) ? $column_options : ($submitted ? [] : NULL);
+  $order = [];
+  $weight = 0;
+
+  foreach ($fields_info as $key => $field) {
+    $default_selected_columns[$key] = [
+      'enable' => !empty($fields[$key])
+    ];
+
+    if (isset($options[$key])) {
+      $order[$key] = $options[$key]['weight'];
+    }
+    else {
+      $order[$key] = $weight++;
+    }
+  }
+
+  $selected_columns = !empty($column_options) ? $column_options : ($submitted ? [] : $default_selected_columns);
+
+  asort($order);
+
+  if (count($order) && $submitted) {
+    $new_fields = array();
+    foreach($order as $field => $weight) {
+      $new_fields[$field] = $fields_info[$field];
+      if (empty($selected_columns[$field]['enable']) && !empty($fields[$field])) {
+        $new_fields[$field]['exclude'] = TRUE;
+      }
+    }
+
+    $types = Views::getHandlerTypes();
+    $view->getDisplay()->setOption($types['field']['plural'], $new_fields);
+  }
+}

@@ -222,7 +222,7 @@ class ViewsColumnOptions extends FilterPluginBase
     // Clear the validation error on the selected_columns field. We supply an
     // empty array [] as options, but the user can select something and this
     // results in a validation error.
-    if ($form_state->getError($form['views_column_options'])) {
+    if ($form_state->getError($form['views_column_options_wrapper']['views_column_options'])) {
       $form_errors = $form_state->getErrors();
       // Clear the form errors.
       $form_state->clearErrors();

@@ -2,3 +2,7 @@ views_column_options:
   css:
     component:
       css/views_column_options.css: {}
+  js:
+    js/views_column_options.js: {}
+  dependencies:
+    - core/sortable

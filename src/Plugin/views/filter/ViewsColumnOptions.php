@@ -2,6 +2,7 @@
 
 namespace Drupal\views_column_options\Plugin\views\filter;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Utility\TableSort;
@@ -147,48 +148,42 @@ class ViewsColumnOptions extends FilterPluginBase
           '#default_value' => $field_enable,
         );
 
-        $elements[$field_name]['field'] = array(
-          '#type' => 'markup',
-          '#markup' => $label,
+        $elements[$field_name]['field'] = array (
+          '#type' => 'container',
+          '#children' => $label,
+          '#attributes' => ['class' => ['item-handle']],
         );
 
         $field_weight = !empty($column_options[$field_name]['weight']) ? $column_options[$field_name]['weight'] : 0;
 
         $elements[$field_name]['weight'] = array(
-          '#type' => 'weight',
+          '#type' => 'hidden',
           '#title' => $label,
           '#title_display' => 'invisible',
           '#default_value' => $field_weight,
           '#attributes' => ['class' => ['item-weight']],
         );
-        $elements[$field_name]['#attributes']['class'][] = 'draggable';
-        $elements[$field_name]['#weight'] = $field_weight;
+        $elements[$field_name] += [
+          '#type' => 'container',
+          '#attributes' => ['class' => ['views-column-options-item']],
+          '#weight' => $field_weight
+        ];
       }
     }
 
     uasort($elements, [SortArray::class, 'sortByWeightProperty']);
     $elements += [
-      '#type' => 'table',
-      '#header' => [
-        'enable' => t('Enable'),
-        'field' => t('Column'),
-        'weight' => t('Weight')
-      ],
+      '#type' => 'container',
       '#attributes' => [
-        'id' => 'views_column_options',
-        'class' => ['clearfix views-column-options']
+        'id' =>  Html::cleanCssIdentifier(implode("-", [$this->view->id() , $this->view->display_handler->display['id'], 'views_column_options'])),
+        'class' => ['clearfix views-column-options views-column-options-list']
       ],
+      '#parents' => ['views_column_options'],
       '#tree' => TRUE,
-      '#tabledrag' => [
-        [
-          'action' => 'order',
-          'relationship' => 'sibling',
-          'group' => 'item-weight',
-        ]
-      ]
+      '#attached' => ['library' => ['views_column_options/views_column_options']],
     ];
 
-    $form['views_column_options_wrapper'] = [
+    $form['views_column_options'] = [
       '#type' => $this->options['wrap_with_details'] ? 'details' : 'container',
       '#open' => FALSE,
       '#title' => $this->options['expose']['label'],
@@ -206,7 +201,6 @@ class ViewsColumnOptions extends FilterPluginBase
 
     // Add our submit routine to process.
     $form['#validate'][] = [$this, 'exposedFormValidate'];
-    $form['#attached']['library'][] = 'views_column_options/views_column_options';
   }
 
   /**
@@ -222,7 +216,8 @@ class ViewsColumnOptions extends FilterPluginBase
     // Clear the validation error on the selected_columns field. We supply an
     // empty array [] as options, but the user can select something and this
     // results in a validation error.
-    if ($form_state->getError($form['views_column_options_wrapper']['views_column_options'])) {
+
+    if (!empty($form['views_column_options']['views_column_options']) && $form_state->getError($form['views_column_options']['views_column_options'])) {
       $form_errors = $form_state->getErrors();
       // Clear the form errors.
       $form_state->clearErrors();
@@ -233,6 +228,7 @@ class ViewsColumnOptions extends FilterPluginBase
         $form_state->setErrorByName($name, $error_message);
       }
     }
+
   }
 
   /**

@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Utility\TableSort;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -137,10 +138,14 @@ class ViewsColumnOptions extends FilterPluginBase
 
     $elements = [];
 
+    /**
+     * @var  $field_name
+     * @var  FieldPluginBase $field_info
+     */
     foreach ($fields_info as $field_name => $field_info) {
       if (!$field_info->options['exclude'] || !empty($this->options['fields'][$field_name])) {
         $field_enable = !empty($column_options[$field_name]['enable']) ? $column_options[$field_name]['enable'] : TRUE;
-        $label = $field_info->options['label'];
+        $label = !empty($field_info->options['label']) ? $field_info->options['label'] : $field_info->definition['title'];
         $elements[$field_name]['enable'] = array(
           '#type' => 'checkbox',
           '#title' => $label,

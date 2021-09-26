@@ -20,7 +20,7 @@
   margin-left: 0px;
 }
 .views-column-options-list .views-column-options-item .item-handle {
-  cursor: grab;
+  cursor: move;
   width: auto;
   margin: 0px 0px 0px 5px;
   padding: 0px;

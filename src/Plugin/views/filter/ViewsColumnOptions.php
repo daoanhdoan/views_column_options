@@ -149,14 +149,8 @@ class ViewsColumnOptions extends FilterPluginBase
         $elements[$field_name]['enable'] = array(
           '#type' => 'checkbox',
           '#title' => $label,
-          '#title_display' => 'invisible',
           '#default_value' => $field_enable,
-        );
-
-        $elements[$field_name]['field'] = array (
-          '#type' => 'container',
-          '#children' => $label,
-          '#attributes' => ['class' => ['item-handle']],
+          '#prefix' => '<span class="item-handle"></span>'
         );
 
         $field_weight = !empty($column_options[$field_name]['weight']) ? $column_options[$field_name]['weight'] : 0;

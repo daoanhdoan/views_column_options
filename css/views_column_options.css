@@ -2,7 +2,7 @@
   display: inline-block;
   border: 1px solid #ccc;
   margin: 0px;
-  padding: 0px;
+  padding: 4px 8px;
   background-color: #fff;
   width: auto !important;
 }
@@ -10,6 +10,7 @@
 .views-column-options-list .views-column-options-item > .form-item {
   display: inline-block;
   padding: 0px;
+  margin: 0px;
   float: right;
 }
 
@@ -19,15 +20,6 @@
 .views-column-options-list .views-column-options-item .form-type-checkbox + .form-wrapper {
   margin-left: 0px;
 }
-.views-column-options-list .views-column-options-item .item-handle {
+.views-column-options-list .views-column-options-item label {
   cursor: move;
-  margin: 0px 0px 0px 5px;
-  padding: 0px;
-  width: 26px;
-  height: 26px;
-  display: inline-block;
-  background: url(../../../../core/misc/icons/787878/move.svg) no-repeat center;
-}
-.views-column-options-list .views-column-options-item:hover .item-handle {
-  background: url(../../../../core/misc/icons/000000/move.svg) no-repeat center;
 }
